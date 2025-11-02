@@ -1,0 +1,65 @@
+[
+  {
+    "id": "node-1",
+    "category": "Trigger",
+    "name": "Webhook",
+    "description": "Trigger workflow on HTTP request",
+    "icon": "webhook"
+  },
+  {
+    "id": "node-2",
+    "category": "Trigger",
+    "name": "Schedule",
+    "description": "Trigger workflow on schedule",
+    "icon": "schedule"
+  },
+  {
+    "id": "node-3",
+    "category": "Action",
+    "name": "HTTP Request",
+    "description": "Make HTTP requests",
+    "icon": "http"
+  },
+  {
+    "id": "node-4",
+    "category": "Action",
+    "name": "Email",
+    "description": "Send emails",
+    "icon": "email"
+  },
+  {
+    "id": "node-5",
+    "category": "Action",
+    "name": "Database",
+    "description": "Query databases",
+    "icon": "database"
+  },
+  {
+    "id": "node-6",
+    "category": "Transform",
+    "name": "Code",
+    "description": "Execute custom code",
+    "icon": "code"
+  },
+  {
+    "id": "node-7",
+    "category": "Transform",
+    "name": "Filter",
+    "description": "Filter data",
+    "icon": "filter_alt"
+  },
+  {
+    "id": "node-8",
+    "category": "Integration",
+    "name": "Slack",
+    "description": "Send Slack messages",
+    "icon": "chat"
+  },
+  {
+    "id": "node-9",
+    "category": "Integration",
+    "name": "Google Sheets",
+    "description": "Read/Write Google Sheets",
+    "icon": "table_chart"
+  }
+]

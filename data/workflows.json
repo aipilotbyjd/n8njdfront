@@ -1,0 +1,74 @@
+[
+  {
+    "id": "wf-1",
+    "name": "Daily Report Generation",
+    "description": "Automatically generates and sends daily reports",
+    "status": "active",
+    "trigger": "schedule",
+    "schedule": "0 9 * * *",
+    "nodes": 5,
+    "lastRun": "2024-01-15T09:00:00Z",
+    "nextRun": "2024-01-16T09:00:00Z",
+    "executions": {
+      "total": 122,
+      "success": 122,
+      "failed": 0
+    },
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-15T09:00:00Z",
+    "tags": ["reporting", "automation"]
+  },
+  {
+    "id": "wf-2",
+    "name": "User Onboarding Email",
+    "description": "Sends welcome emails to new users",
+    "status": "active",
+    "trigger": "webhook",
+    "nodes": 3,
+    "lastRun": "2024-01-15T08:45:00Z",
+    "executions": {
+      "total": 307,
+      "success": 305,
+      "failed": 2
+    },
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-15T08:45:00Z",
+    "tags": ["email", "onboarding"]
+  },
+  {
+    "id": "wf-3",
+    "name": "Invoice Processing",
+    "description": "Processes invoices and updates accounting system",
+    "status": "error",
+    "trigger": "webhook",
+    "nodes": 7,
+    "lastRun": "2024-01-15T08:00:00Z",
+    "executions": {
+      "total": 90,
+      "success": 89,
+      "failed": 1
+    },
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-15T08:00:00Z",
+    "tags": ["finance", "automation"]
+  },
+  {
+    "id": "wf-4",
+    "name": "Social Media Poster",
+    "description": "Posts content to multiple social media platforms",
+    "status": "active",
+    "trigger": "schedule",
+    "schedule": "0 */6 * * *",
+    "nodes": 4,
+    "lastRun": "2024-01-15T06:00:00Z",
+    "nextRun": "2024-01-15T12:00:00Z",
+    "executions": {
+      "total": 45,
+      "success": 45,
+      "failed": 0
+    },
+    "createdAt": "2024-01-05T00:00:00Z",
+    "updatedAt": "2024-01-15T06:00:00Z",
+    "tags": ["social-media", "marketing"]
+  }
+]

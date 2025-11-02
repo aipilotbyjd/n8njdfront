@@ -1,0 +1,34 @@
+[
+  {
+    "id": "template-1",
+    "name": "Email Notification System",
+    "description": "Send automated email notifications based on triggers",
+    "category": "Communication",
+    "nodes": 4,
+    "uses": 1234
+  },
+  {
+    "id": "template-2",
+    "name": "Data Sync to Google Sheets",
+    "description": "Automatically sync data to Google Sheets",
+    "category": "Productivity",
+    "nodes": 3,
+    "uses": 892
+  },
+  {
+    "id": "template-3",
+    "name": "Slack Alert System",
+    "description": "Send alerts to Slack channels",
+    "category": "Communication",
+    "nodes": 2,
+    "uses": 756
+  },
+  {
+    "id": "template-4",
+    "name": "Database Backup",
+    "description": "Automated database backup to cloud storage",
+    "category": "DevOps",
+    "nodes": 5,
+    "uses": 543
+  }
+]

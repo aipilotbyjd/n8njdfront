@@ -1,0 +1,43 @@
+[
+  {
+    "id": "exec-1",
+    "workflowId": "wf-1",
+    "workflowName": "Daily Report Generation",
+    "status": "success",
+    "startedAt": "2024-01-15T09:00:00Z",
+    "finishedAt": "2024-01-15T09:00:45Z",
+    "duration": 45,
+    "mode": "trigger"
+  },
+  {
+    "id": "exec-2",
+    "workflowId": "wf-2",
+    "workflowName": "User Onboarding Email",
+    "status": "success",
+    "startedAt": "2024-01-15T08:45:00Z",
+    "finishedAt": "2024-01-15T08:45:12Z",
+    "duration": 12,
+    "mode": "webhook"
+  },
+  {
+    "id": "exec-3",
+    "workflowId": "wf-3",
+    "workflowName": "Invoice Processing",
+    "status": "error",
+    "startedAt": "2024-01-15T08:00:00Z",
+    "finishedAt": "2024-01-15T08:00:23Z",
+    "duration": 23,
+    "mode": "webhook",
+    "error": "Connection timeout to accounting API"
+  },
+  {
+    "id": "exec-4",
+    "workflowId": "wf-4",
+    "workflowName": "Social Media Poster",
+    "status": "success",
+    "startedAt": "2024-01-15T06:00:00Z",
+    "finishedAt": "2024-01-15T06:00:34Z",
+    "duration": 34,
+    "mode": "trigger"
+  }
+]
