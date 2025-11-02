@@ -2,12 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import executionsData from '../data/executions.json';
-import credentialsData from '../data/credentials.json';
-import templatesData from '../data/templates.json';
 import WorkflowEditor from './components/WorkflowEditor';
 import { DashboardContent, WorkflowsContent, ExecutionsContent, CredentialsContent, TemplatesContent, SettingsContent } from './components/DashboardComponents';
-import { authAPI, workflowAPI } from '@/lib/api';
+import { authAPI, workflowAPI, executionAPI, credentialAPI, templateAPI } from '@/lib/api';
 
 export default function Home() {
   const router = useRouter();
@@ -20,11 +17,17 @@ export default function Home() {
   const [timeRange, setTimeRange] = useState('24h');
   const [workflows, setWorkflows] = useState<any[]>([]);
   const [workflowPagination, setWorkflowPagination] = useState<any>(null);
-  const [executions, setExecutions] = useState(executionsData);
-  const [credentials, setCredentials] = useState(credentialsData);
+  const [executions, setExecutions] = useState<any[]>([]);
+  const [executionPagination, setExecutionPagination] = useState<any>(null);
+  const [credentials, setCredentials] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [templatePagination, setTemplatePagination] = useState<any>(null);
   const [showEditor, setShowEditor] = useState(false);
   const [editingWorkflow, setEditingWorkflow] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [executionsLoading, setExecutionsLoading] = useState(false);
+  const [credentialsLoading, setCredentialsLoading] = useState(false);
+  const [templatesLoading, setTemplatesLoading] = useState(false);
 
   const organizations = [
     { name: 'Automation Inc.', logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXy6_OiVXihCR01eP7vu_XdvWpcLTzQmSnVqLIZK18mfBSBhKwQ9xRgzxvblaOEOvJyksIyaMEJK7VTBTDs9oGx97bC18mFmW_qLAAkwslHQjOLucxgZOqMMIKSUx303wSzyoUo8acI1byfIdAl9ur5QWXh7JcdlTotqh7PvliBZVuwpumSWXbr6EBns47osUifvc3RnkDeB7hDAwhBPPsFZRb8TFk1Z6Z6Vqq664-I6F-wadA-hrye1lTY2-6jsejfBWaDJzYPcU' },
@@ -40,6 +43,9 @@ export default function Home() {
 
   useEffect(() => {
     fetchWorkflows();
+    fetchExecutions();
+    fetchCredentials();
+    fetchTemplates();
   }, []);
 
   useEffect(() => {
@@ -72,9 +78,123 @@ export default function Home() {
     }
   };
 
-  const openEditor = (workflow?: any) => {
+  const fetchExecutions = async (page = 1) => {
+    setExecutionsLoading(true);
+    try {
+      const result = await executionAPI.getAll(page);
+      setExecutions(result.data);
+      setExecutionPagination(result);
+    } catch (err) {
+      console.error('Failed to fetch executions:', err);
+    } finally {
+      setExecutionsLoading(false);
+    }
+  };
+
+  const fetchCredentials = async () => {
+    setCredentialsLoading(true);
+    try {
+      const result = await credentialAPI.getAll();
+      setCredentials(result.data || result);
+    } catch (err) {
+      console.error('Failed to fetch credentials:', err);
+    } finally {
+      setCredentialsLoading(false);
+    }
+  };
+
+  const fetchTemplates = async (page = 1) => {
+    setTemplatesLoading(true);
+    try {
+      const result = await templateAPI.getAll(page);
+      setTemplates(result.data);
+      setTemplatePagination(result);
+    } catch (err) {
+      console.error('Failed to fetch templates:', err);
+    } finally {
+      setTemplatesLoading(false);
+    }
+  };
+
+  const openEditor = (workflow: any = null) => {
     setEditingWorkflow(workflow);
     setShowEditor(true);
+  };
+
+  const handleSaveWorkflow = () => {
+    setShowEditor(false);
+    fetchWorkflows(workflowPagination?.current_page || 1);
+  };
+
+  const handleDeleteWorkflow = async (id: number) => {
+    if (confirm('Are you sure you want to delete this workflow?')) {
+      try {
+        await workflowAPI.delete(id);
+        fetchWorkflows(workflowPagination?.current_page || 1);
+      } catch (err) {
+        console.error('Failed to delete workflow:', err);
+      }
+    }
+  };
+
+  const handleDuplicateWorkflow = async (id: number) => {
+    try {
+      await workflowAPI.duplicate(id);
+      fetchWorkflows(workflowPagination?.current_page || 1);
+    } catch (err) {
+      console.error('Failed to duplicate workflow:', err);
+    }
+  };
+
+  const handleActivateWorkflow = async (id: number) => {
+    try {
+      await workflowAPI.activate(id);
+      fetchWorkflows(workflowPagination?.current_page || 1);
+    } catch (err) {
+      console.error('Failed to activate workflow:', err);
+    }
+  };
+
+  const handleDeactivateWorkflow = async (id: number) => {
+    try {
+      await workflowAPI.deactivate(id);
+      fetchWorkflows(workflowPagination?.current_page || 1);
+    } catch (err) {
+      console.error('Failed to deactivate workflow:', err);
+    }
+  };
+
+  const handleExecuteWorkflow = async (id: number) => {
+    try {
+      await workflowAPI.execute(id);
+      fetchExecutions();
+    } catch (err) {
+      console.error('Failed to execute workflow:', err);
+    }
+  };
+
+  const handleDeleteCredential = async (id: number) => {
+    if (confirm('Are you sure you want to delete this credential?')) {
+      try {
+        await credentialAPI.delete(id);
+        fetchCredentials();
+      } catch (err) {
+        console.error('Failed to delete credential:', err);
+      }
+    }
+  };
+
+  const handleUseTemplate = async (id: number) => {
+    try {
+      const result = await templateAPI.use(id);
+      if (result.data?.workflow_id) {
+        fetchWorkflows();
+        const workflow = await workflowAPI.getById(result.data.workflow_id);
+        openEditor(workflow);
+      }
+    } catch (err) {
+      console.error('Failed to use template:', err);
+    }
   };
 
   const handleLogout = async () => {
@@ -95,13 +215,13 @@ export default function Home() {
       case 'dashboard':
         return <DashboardContent timeRange={timeRange} setTimeRange={setTimeRange} workflows={workflows} executions={executions} openEditor={openEditor} />;
       case 'workflows':
-        return <WorkflowsContent workflows={workflows} setWorkflows={setWorkflows} openEditor={openEditor} pagination={workflowPagination} onPageChange={fetchWorkflows} loading={loading} />;
+        return <WorkflowsContent workflows={workflows} setWorkflows={setWorkflows} openEditor={openEditor} pagination={workflowPagination} onPageChange={fetchWorkflows} loading={loading} onDelete={handleDeleteWorkflow} onDuplicate={handleDuplicateWorkflow} onActivate={handleActivateWorkflow} onDeactivate={handleDeactivateWorkflow} onExecute={handleExecuteWorkflow} />;
       case 'executions':
-        return <ExecutionsContent executions={executions} />;
+        return <ExecutionsContent executions={executions} pagination={executionPagination} onPageChange={fetchExecutions} loading={executionsLoading} />;
       case 'credentials':
-        return <CredentialsContent credentials={credentials} setCredentials={setCredentials} />;
+        return <CredentialsContent credentials={credentials} setCredentials={setCredentials} onDelete={handleDeleteCredential} onRefresh={fetchCredentials} loading={credentialsLoading} />;
       case 'templates':
-        return <TemplatesContent templates={templatesData} openEditor={openEditor} />;
+        return <TemplatesContent templates={templates} pagination={templatePagination} onPageChange={fetchTemplates} onUse={handleUseTemplate} loading={templatesLoading} />;
       case 'settings':
         return <SettingsContent />;
       default:
@@ -111,7 +231,7 @@ export default function Home() {
 
   return (
     <>
-      {showEditor && <WorkflowEditor workflow={editingWorkflow} onClose={() => setShowEditor(false)} />}
+      {showEditor && <WorkflowEditor workflow={editingWorkflow} onClose={() => setShowEditor(false)} onSave={handleSaveWorkflow} />}
       <div className="relative h-screen bg-[#0a0e1a] text-gray-200 overflow-hidden">
         <div className="gradient-bg fixed inset-0" />
         <div className="flex h-full relative z-10">
