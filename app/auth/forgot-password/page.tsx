@@ -2,14 +2,27 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useToast } from '@/lib/toast';
 
 export default function ForgotPassword() {
+  const { showToast } = useToast();
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setSuccess(true);
+      showToast('Password reset link sent to your email', 'success');
+    } catch (err) {
+      showToast('Failed to send reset link', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -21,7 +34,7 @@ export default function ForgotPassword() {
       
       <div className="w-full max-w-md relative z-10">
         <div className="bg-glass backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-2xl shadow-[#607AFB]/20">
-          {!submitted ? (
+          {!success ? (
             <>
               <div className="text-center mb-10">
                 <div className="relative inline-block mb-6">
@@ -34,7 +47,7 @@ export default function ForgotPassword() {
                 <p className="text-gray-400 text-lg">No worries, we'll send you reset instructions</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="group">
                   <label className="text-gray-300 text-sm font-medium mb-2 block">Email Address</label>
                   <div className="relative">
@@ -52,9 +65,10 @@ export default function ForgotPassword() {
 
                 <button
                   type="submit"
-                  className="w-full py-4 bg-gradient-to-r from-[#607AFB] to-[#8B5CF6] text-white rounded-xl font-semibold hover:shadow-2xl hover:shadow-[#607AFB]/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  disabled={loading}
+                  className="w-full py-4 bg-gradient-to-r from-[#607AFB] to-[#8B5CF6] text-white rounded-xl font-semibold hover:shadow-2xl hover:shadow-[#607AFB]/50 hover:scale-[1.02] active:scale-[0.98] transition-all mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Reset Link
+                  {loading ? 'Sending...' : 'Send Reset Link'}
                 </button>
               </form>
 
@@ -66,41 +80,19 @@ export default function ForgotPassword() {
               </div>
             </>
           ) : (
-            <>
-              <div className="text-center">
-                <div className="relative inline-block mb-6">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl blur-xl opacity-50 animate-pulse"></div>
-                  <div className="relative w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined text-white text-4xl">mark_email_read</span>
-                  </div>
+            <div className="text-center">
+              <div className="relative inline-block mb-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl blur-xl opacity-50 animate-pulse"></div>
+                <div className="relative w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="material-symbols-outlined text-white text-4xl">mark_email_read</span>
                 </div>
-                <h1 className="text-4xl font-bold text-white mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Check Your Email</h1>
-                <p className="text-gray-400 text-lg mb-2">
-                  We sent a password reset link to
-                </p>
-                <p className="text-white font-semibold text-lg mb-8">{email}</p>
-                
-                <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-8">
-                  <div className="flex items-start gap-3">
-                    <span className="material-symbols-outlined text-[#607AFB] text-xl mt-0.5">info</span>
-                    <p className="text-gray-400 text-sm text-left">
-                      Didn't receive the email? Check your spam folder or{' '}
-                      <button onClick={() => setSubmitted(false)} className="text-[#607AFB] hover:text-[#8B5CF6] transition-colors font-semibold">
-                        try another email address
-                      </button>
-                    </p>
-                  </div>
-                </div>
-
-                <Link 
-                  href="/auth/login"
-                  className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
-                >
-                  <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                  Back to login
-                </Link>
               </div>
-            </>
+              <h1 className="text-4xl font-bold text-white mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Check Your Email</h1>
+              <p className="text-gray-400 text-lg mb-8">We've sent password reset instructions to {email}</p>
+              <Link href="/auth/login" className="text-[#607AFB] hover:text-[#8B5CF6] transition-colors font-semibold">
+                Back to login
+              </Link>
+            </div>
           )}
         </div>
       </div>

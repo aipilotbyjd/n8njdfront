@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Automation Inc. - Frontend
+
+A modern, production-ready workflow automation platform built with Next.js 16, React 19, and TypeScript.
+
+## Features
+
+- 🚀 **Modern Stack**: Next.js 16 with App Router, React 19, TypeScript
+- 🎨 **Beautiful UI**: Tailwind CSS 4 with glassmorphism design
+- 🔐 **Authentication**: Complete auth flow (login, signup, password management)
+- 📊 **Dashboard**: Real-time workflow monitoring and analytics
+- 🔄 **Workflow Editor**: Visual workflow builder with React Flow
+- 🔑 **Credentials Management**: Secure credential storage for integrations
+- 📋 **Templates**: Pre-built workflow templates
+- 🔔 **Toast Notifications**: User-friendly feedback system
+- 🛡️ **Error Boundaries**: Graceful error handling
+- 📱 **Responsive**: Mobile-first design
+- ⚡ **Performance**: Optimized for production with code splitting
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- Backend API running (n8njd)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create `.env.local` file:
+
+```env
+NEXT_PUBLIC_API_URL=http://n8njd.test/api/v1
+NEXT_PUBLIC_APP_NAME=Automation Inc.
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+n8njdfront/
+├── app/
+│   ├── auth/              # Authentication pages
+│   ├── components/        # Reusable components
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Main dashboard
+├── lib/
+│   ├── api.ts            # API client
+│   ├── config.ts         # Configuration
+│   └── toast.tsx         # Toast notification system
+├── public/               # Static assets
+└── middleware.ts         # Route protection
+```
 
-## Learn More
+## Key Features
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
+- Login with email/password
+- User registration
+- Password change
+- Forgot password flow
+- Protected routes with middleware
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Dashboard
+- Workflow statistics
+- Execution history
+- Real-time updates
+- Quick actions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Workflow Editor
+- Visual workflow builder
+- Drag-and-drop nodes
+- Node connections
+- Real-time preview
+- Save/update workflows
 
-## Deploy on Vercel
+### Credentials Management
+- Multiple credential types (HTTP, OAuth2, API Key, Database, SMTP, AWS, etc.)
+- Secure storage
+- Easy management
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Templates
+- Pre-built workflow templates
+- One-click deployment
+- Template marketplace
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Production Build
+
+```bash
+npm run build
+npm start
+```
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | Backend API URL | `http://n8njd.test/api/v1` |
+| `NEXT_PUBLIC_APP_NAME` | Application name | `Automation Inc.` |
+| `NEXT_PUBLIC_APP_URL` | Frontend URL | `http://localhost:3000` |
+
+## Technologies
+
+- **Framework**: Next.js 16
+- **UI Library**: React 19
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **Workflow Editor**: React Flow
+- **Icons**: Material Symbols
+- **Fonts**: Spline Sans
+
+## Performance Optimizations
+
+- Code splitting with dynamic imports
+- Image optimization
+- Font optimization
+- Compression enabled
+- React strict mode
+- Package import optimization
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+Proprietary - All rights reserved
+
+## Support
+
+For support, email support@automationinc.com

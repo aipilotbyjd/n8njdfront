@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { credentialAPI } from '@/lib/api';
+import { useToast } from '@/lib/toast';
 
 interface CredentialModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const credentialTypes = [
 ];
 
 export default function CredentialModal({ isOpen, onClose, onSave, credential }: CredentialModalProps) {
+  const { showToast } = useToast();
   const [name, setName] = useState('');
   const [type, setType] = useState('http');
   const [data, setData] = useState<any>({});
@@ -49,13 +51,17 @@ export default function CredentialModal({ isOpen, onClose, onSave, credential }:
       const payload = { name, type, data };
       if (credential) {
         await credentialAPI.update(credential.id, payload);
+        showToast('Credential updated successfully', 'success');
       } else {
         await credentialAPI.create(payload);
+        showToast('Credential created successfully', 'success');
       }
       onSave();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to save credential');
+      const errorMsg = err.message || 'Failed to save credential';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }

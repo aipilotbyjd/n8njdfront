@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { authAPI } from '@/lib/api';
+import { useToast } from '@/lib/toast';
 
 export default function ChangePassword() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     current_password: '',
     password: '',
@@ -22,7 +24,9 @@ export default function ChangePassword() {
     setError('');
     
     if (formData.password !== formData.password_confirmation) {
-      setError('New passwords do not match');
+      const errorMsg = 'New passwords do not match';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
       return;
     }
 
@@ -32,12 +36,17 @@ export default function ChangePassword() {
 
       if (result.success) {
         setSuccess(true);
+        showToast('Password changed successfully!', 'success');
         setTimeout(() => router.push('/'), 2000);
       } else {
-        setError(result.message || 'Password change failed');
+        const errorMsg = result.message || 'Password change failed';
+        setError(errorMsg);
+        showToast(errorMsg, 'error');
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch (err: any) {
+      const errorMsg = err.message || 'An error occurred. Please try again.';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }

@@ -396,3 +396,103 @@ export function SettingsContent() {
     </div>
   );
 }
+
+export function WebhooksContent({ webhooks, onRefresh, loading }: any) {
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-white text-3xl font-bold tracking-tight">Webhooks</h1>
+          <p className="text-gray-400 mt-2">Manage workflow webhooks</p>
+        </div>
+        <button className="px-6 py-3 bg-gradient-to-r from-[#607AFB] to-[#8B5CF6] text-white rounded-xl transition-all duration-300 flex items-center gap-2 shadow-lg shadow-[#607AFB]/30 hover:scale-105">
+          <span className="material-symbols-outlined text-lg">add</span>
+          <span className="font-semibold">Create Webhook</span>
+        </button>
+      </div>
+      
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="text-gray-400">Loading webhooks...</div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6">
+          {(webhooks || []).map((webhook: any) => (
+            <div key={webhook.id} className="bg-glass rounded-2xl p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h3 className="text-white font-bold text-lg mb-2">{webhook.path}</h3>
+                  <p className="text-gray-400 text-sm mb-2">{webhook.method} • {webhook.trigger_count || 0} triggers</p>
+                  <code className="text-xs text-[#607AFB] bg-[#607AFB]/10 px-2 py-1 rounded">{webhook.url || `http://n8njd.test/api/webhook/${webhook.workflow_id}/${webhook.path}`}</code>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm transition-all">
+                    Test
+                  </button>
+                  <button className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-sm transition-all">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function VariablesContent({ variables, onRefresh, loading }: any) {
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-white text-3xl font-bold tracking-tight">Variables</h1>
+          <p className="text-gray-400 mt-2">Manage environment variables</p>
+        </div>
+        <button className="px-6 py-3 bg-gradient-to-r from-[#607AFB] to-[#8B5CF6] text-white rounded-xl transition-all duration-300 flex items-center gap-2 shadow-lg shadow-[#607AFB]/30 hover:scale-105">
+          <span className="material-symbols-outlined text-lg">add</span>
+          <span className="font-semibold">Add Variable</span>
+        </button>
+      </div>
+      
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="text-gray-400">Loading variables...</div>
+        </div>
+      ) : (
+        <div className="bg-glass rounded-2xl overflow-hidden">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs text-gray-400 uppercase bg-white/5">
+              <tr>
+                <th className="px-6 py-3">Key</th>
+                <th className="px-6 py-3">Type</th>
+                <th className="px-6 py-3">Scope</th>
+                <th className="px-6 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(variables || []).map((variable: any) => (
+                <tr key={variable.id} className="border-b border-white/10 hover:bg-white/5">
+                  <td className="px-6 py-4 text-white font-mono">{variable.key}</td>
+                  <td className="px-6 py-4 text-gray-400 capitalize">{variable.type}</td>
+                  <td className="px-6 py-4 text-gray-400">{variable.workflow_id ? 'Workflow' : 'Global'}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-2">
+                      <button className="text-gray-400 hover:text-white transition-colors">
+                        <span className="material-symbols-outlined text-sm">edit</span>
+                      </button>
+                      <button className="text-red-400 hover:text-red-300 transition-colors">
+                        <span className="material-symbols-outlined text-sm">delete</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}

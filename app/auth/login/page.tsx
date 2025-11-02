@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { authAPI } from '@/lib/api';
+import { useToast } from '@/lib/toast';
 
 export default function Login() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -22,15 +24,22 @@ export default function Login() {
       const result = await authAPI.login({ email, password });
 
       if (result.success) {
-        localStorage.setItem('access_token', result.data.access_token);
-        localStorage.setItem('user', JSON.stringify(result.data.user));
-        localStorage.setItem('organization', JSON.stringify(result.data.organization));
+        const token = result.data.token || result.data.access_token;
+        localStorage.setItem('access_token', token);
+        document.cookie = `access_token=${token}; path=/; max-age=3600`;
+        if (result.data.user) {
+          localStorage.setItem('user', JSON.stringify(result.data.user));
+        }
+        if (result.data.organization) {
+          localStorage.setItem('organization', JSON.stringify(result.data.organization));
+        }
+        showToast('Login successful! Welcome back.', 'success');
         router.push('/');
-      } else {
-        setError(result.message || 'Login failed');
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch (err: any) {
+      const errorMsg = err.message || 'An error occurred. Please try again.';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setLoading(false);
     }

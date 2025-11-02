@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import ReactFlow, { 
   addEdge, 
   Background, 
@@ -14,6 +14,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { workflowAPI } from '@/lib/api';
+import { useToast } from '@/lib/toast';
 
 const nodeTypes = {
   trigger: ['Webhook', 'Schedule', 'Email Trigger', 'Manual'],
@@ -25,6 +26,7 @@ const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 export default function WorkflowEditor({ workflow, onClose, onSave }: any) {
+  const { showToast } = useToast();
   const [nodes, setNodes, onNodesChange] = useNodesState(workflow?.nodes || initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(workflow?.connections || initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -52,7 +54,9 @@ export default function WorkflowEditor({ workflow, onClose, onSave }: any) {
 
   const handleSave = async () => {
     if (!workflowName.trim()) {
-      setError('Workflow name is required');
+      const errorMsg = 'Workflow name is required';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
       return;
     }
 
@@ -70,18 +74,24 @@ export default function WorkflowEditor({ workflow, onClose, onSave }: any) {
       let result;
       if (workflow?.id) {
         result = await workflowAPI.update(workflow.id, data);
+        showToast('Workflow updated successfully', 'success');
       } else {
         result = await workflowAPI.create(data);
+        showToast('Workflow created successfully', 'success');
       }
 
       if (result.success || result.data) {
         if (onSave) onSave();
         onClose();
       } else {
-        setError(result.message || 'Failed to save workflow');
+        const errorMsg = result.message || 'Failed to save workflow';
+        setError(errorMsg);
+        showToast(errorMsg, 'error');
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to save workflow');
+      const errorMsg = err.message || 'Failed to save workflow';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
       console.error('Failed to save workflow:', err);
     } finally {
       setSaving(false);
