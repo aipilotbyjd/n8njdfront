@@ -12,14 +12,13 @@ interface CredentialModalProps {
 }
 
 const credentialTypes = [
-  { value: 'http', label: 'HTTP Basic Auth', icon: 'http' },
+  { value: 'http_basic', label: 'HTTP Basic Auth', icon: 'http' },
+  { value: 'http_bearer', label: 'HTTP Bearer Token', icon: 'security' },
   { value: 'oauth2', label: 'OAuth2', icon: 'verified_user' },
   { value: 'api_key', label: 'API Key', icon: 'vpn_key' },
   { value: 'database', label: 'Database', icon: 'storage' },
   { value: 'smtp', label: 'SMTP', icon: 'email' },
   { value: 'aws', label: 'AWS', icon: 'cloud' },
-  { value: 'google', label: 'Google', icon: 'google' },
-  { value: 'slack', label: 'Slack', icon: 'chat' },
 ];
 
 export default function CredentialModal({ isOpen, onClose, onSave, credential }: CredentialModalProps) {
@@ -37,7 +36,7 @@ export default function CredentialModal({ isOpen, onClose, onSave, credential }:
       setData(credential.data || {});
     } else {
       setName('');
-      setType('http');
+      setType('http_basic');
       setData({});
     }
   }, [credential, isOpen]);
@@ -69,7 +68,7 @@ export default function CredentialModal({ isOpen, onClose, onSave, credential }:
 
   const renderFields = () => {
     switch (type) {
-      case 'http':
+      case 'http_basic':
         return (
           <>
             <div>
@@ -91,6 +90,18 @@ export default function CredentialModal({ isOpen, onClose, onSave, credential }:
               />
             </div>
           </>
+        );
+      case 'http_bearer':
+        return (
+          <div>
+            <label className="text-gray-400 text-sm mb-2 block">Bearer Token</label>
+            <input
+              type="password"
+              value={data.token || ''}
+              onChange={(e) => setData({ ...data, token: e.target.value })}
+              className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:border-[#607AFB] focus:ring-2 focus:ring-[#607AFB]/30"
+            />
+          </div>
         );
       case 'api_key':
         return (
@@ -244,12 +255,16 @@ export default function CredentialModal({ isOpen, onClose, onSave, credential }:
       default:
         return (
           <div>
-            <label className="text-gray-400 text-sm mb-2 block">Token</label>
-            <input
-              type="password"
-              value={data.token || ''}
-              onChange={(e) => setData({ ...data, token: e.target.value })}
-              className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:border-[#607AFB] focus:ring-2 focus:ring-[#607AFB]/30"
+            <label className="text-gray-400 text-sm mb-2 block">Configuration (JSON)</label>
+            <textarea
+              value={JSON.stringify(data, null, 2)}
+              onChange={(e) => {
+                try {
+                  setData(JSON.parse(e.target.value));
+                } catch {}
+              }}
+              rows={6}
+              className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono focus:border-[#607AFB] focus:ring-2 focus:ring-[#607AFB]/30"
             />
           </div>
         );

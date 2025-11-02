@@ -20,7 +20,9 @@ export default function CredentialsPage() {
     setLoading(true);
     try {
       const result = await credentialAPI.getAll();
-      if (result.success) {
+      if (Array.isArray(result)) {
+        setCredentials(result);
+      } else if (result.success) {
         setCredentials(result.data || []);
       }
     } catch (err: any) {
@@ -69,7 +71,9 @@ export default function CredentialsPage() {
                 <span className="material-symbols-outlined text-green-400 text-2xl">key</span>
               </div>
               <h3 className="text-white font-bold text-lg mb-1">{credential.name}</h3>
-              <p className="text-gray-400 text-sm capitalize mb-4">{credential.type}</p>
+              <p className="text-gray-400 text-sm mb-1">{credential.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+              {credential.description && <p className="text-gray-500 text-xs mb-4">{credential.description}</p>}
+              {!credential.description && <div className="mb-4"></div>}
               <div className="flex gap-2">
                 <button onClick={() => { setEditingCredential(credential); setShowModal(true); }} className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm">
                   Edit
